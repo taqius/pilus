@@ -26,10 +26,22 @@ var baseurl='http://localhost/pilus/';
 
     //Berisi Macam Macam Fungsi Ajax
 $(function() {
-
+    //live search data SPP
     $('#keyword').on('keyup', function(){
-        $('#isitabel').load(baseurl+"tu/datalivesearch");
-    })
+        var keyword=$("#keyword").val();
+        $.ajax({
+            url:`${baseurl}tu/datalivesearch`,
+            data:{keyword : keyword},
+            async: 'false',
+            cache: 'false',
+            method: 'post',
+            dataType: 'html',
+            success: function(livesearch){
+            $("#divtabel").html(livesearch);
+            console.log(livesearch);
+            }
+        });
+    });
 
     //Tombol Tambah Menu ke Modal
     $('.addnewmenu').on('click', function(){

@@ -9,7 +9,7 @@ class Tu extends CI_Controller
         $this->load->model('Tu_model');
         cek_loggin();
     }
-public function index2()
+    public function index2()
     {
         $jenisket = 'SPP';
         //mengambil data user dari database user where username sama dengan session yang masuk
@@ -30,64 +30,70 @@ public function index2()
     //view index
     public function index()
     {
-        $jenisket = 'SPP';
-        //mengambil data user dari database user where username sama dengan session yang masuk
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-        $data['judul'] = 'Data SPP';
-        $data['kelas'] = $this->Tu_model->getKelas();
-        $data['siswa'] = $this->Tu_model->getSiswa();
-        //PAGINATION
-        $this->load->library('pagination');
 
-        //config load library
-        $config['base_url'] = 'http://192.168.3.2/tu/index';
-        $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
-        $config['per_page'] = 10;
-        $config['num_links'] = 5;
+        $nama = $this->input->post('keyword');
+        if (!empty($nama)) {
+            $this->load->datalivesearch();
+        } else {
+            $jenisket = 'SPP';
+            //mengambil data user dari database user where username sama dengan session yang masuk
+            $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+            $data['judul'] = 'Data SPP';
+            $data['kelas'] = $this->Tu_model->getKelas();
+            $data['siswa'] = $this->Tu_model->getSiswa();
+            //PAGINATION
+            $this->load->library('pagination');
 
-        //styling pagination
-        $config['full_tag_open'] = '<nav>
+            //config load library
+            $config['base_url'] = 'http://localhost/pilus/tu/index';
+            $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
+            $config['per_page'] = 10;
+            $config['num_links'] = 5;
+
+            //styling pagination
+            $config['full_tag_open'] = '<nav>
         <ul class="pagination justify-content-center">';
-        $config['full_tag_close'] = '</ul></nav>';
+            $config['full_tag_close'] = '</ul></nav>';
 
-        $config['first_link'] = 'First';
-        $config['first_tag_open'] = '<li class="page-item">';
-        $config['first_tag_close'] = '</li>';
+            $config['first_link'] = 'First';
+            $config['first_tag_open'] = '<li class="page-item">';
+            $config['first_tag_close'] = '</li>';
 
-        $config['last_link'] = 'Last';
-        $config['last_tag_open'] = '<li class="page-item">';
-        $config['last_tag_close'] = '</li>';
+            $config['last_link'] = 'Last';
+            $config['last_tag_open'] = '<li class="page-item">';
+            $config['last_tag_close'] = '</li>';
 
-        $config['next_link'] = '&raquo';
-        $config['next_tag_open'] = '<li class="page-item">';
-        $config['next_tag_close'] = '</li>';
+            $config['next_link'] = '&raquo';
+            $config['next_tag_open'] = '<li class="page-item">';
+            $config['next_tag_close'] = '</li>';
 
-        $config['prev_link'] = '&laquo';
-        $config['prev_tag_open'] = '<li class="page-item">';
-        $config['prev_tag_close'] = '</li>';
+            $config['prev_link'] = '&laquo';
+            $config['prev_tag_open'] = '<li class="page-item">';
+            $config['prev_tag_close'] = '</li>';
 
-        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close'] = '</a></li>';
+            $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+            $config['cur_tag_close'] = '</a></li>';
 
-        $config['num_tag_open'] = '<li class="page-item">';
-        $config['num_tag_close'] = '</li>';
+            $config['num_tag_open'] = '<li class="page-item">';
+            $config['num_tag_close'] = '</li>';
 
-        $config['attributes'] = array('class' => 'page-link');
-
-
-
-        //initialize
-        $this->pagination->initialize($config);
+            $config['attributes'] = array('class' => 'page-link');
 
 
 
-        $data['start'] = $this->uri->segment(3);
-        $data['pembayaran'] = $this->Tu_model->getPembayaran($jenisket, $config['per_page'], $data['start']);
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/wrapper', $data);
-        $this->load->view('tu/index', $data);
-        $this->load->view('templates/footer');
+            //initialize
+            $this->pagination->initialize($config);
+
+
+
+            $data['start'] = $this->uri->segment(3);
+            $data['pembayaran'] = $this->Tu_model->getPembayaran($jenisket, $config['per_page'], $data['start']);
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/wrapper', $data);
+            $this->load->view('tu/index', $data);
+            $this->load->view('templates/footer');
+        }
     }
     //view data NON-SPP
     public function indexnon()
@@ -102,7 +108,7 @@ public function index2()
         $this->load->library('pagination');
 
         //config load library
-        $config['base_url'] = 'http://192.168.3.2/tu/indexnon';
+        $config['base_url'] = 'http://localhost/pilus/tu/indexnon';
         $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
         $config['per_page'] = 10;
         $config['num_links'] = 5;
@@ -151,6 +157,13 @@ public function index2()
         $this->load->view('tu/indexnon', $data);
         $this->load->view('templates/footer');
     }
+    public function datalivesearch()
+    {
+        $jenisket = 'SPP';
+        $nama = $this->input->post('keyword');
+        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket, $nama);
+        $this->load->view('tu/datalivesearch', $data);
+    }
 
     //view bayar
     public function bayar()
@@ -188,6 +201,7 @@ public function index2()
             redirect('tu/bayar');
         }
     }
+
 
     //view data siswa
     public function datasiswa()
@@ -367,7 +381,7 @@ public function index2()
         }
     }
 
-public function tagihansiswa2()
+    public function tagihansiswa2()
     {
         $id = $this->input->post('id');
         $gunabayar = $this->input->post('gunabayar');
@@ -409,7 +423,7 @@ public function tagihansiswa2()
         echo json_encode($data);
     }
 
-//view pengeluaran
+    //view pengeluaran
     public function pengeluaran()
     {
         //mengambil data user dari database user where username sama dengan session yang masuk
@@ -419,7 +433,7 @@ public function tagihansiswa2()
         $this->load->library('pagination');
 
         //config load library
-        $config['base_url'] = 'http://192.168.3.2/tu/pengeluaran';
+        $config['base_url'] = 'http://localhost/pilus/tu/pengeluaran';
         $config['total_rows'] = $this->Tu_model->countAllPengeluaran();
         $config['per_page'] = 10;
         $config['num_links'] = 5;
@@ -497,7 +511,7 @@ public function tagihansiswa2()
         $data['pemasukan'] = $this->Tu_model->totalPemasukanBulan();
         $data['SPP'] = $this->Tu_model->totalPemasukanBulanSPP();
         $data['NonSPP'] = $this->Tu_model->totalPemasukanBulanNonSPP();
-	$data['pengeluaran'] = $this->Tu_model->totalPengeluaranBulan();
+        $data['pengeluaran'] = $this->Tu_model->totalPengeluaranBulan();
         $data['judul'] = 'Laporan Keuangan';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);

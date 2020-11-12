@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Tu_model extends CI_model
 {
-public function getAllPembayaran($jenisket)
+    public function getAllPembayaran($jenisket, $nama)
     {
         $this->db->select('*');
         $this->db->from('pembayaran');
@@ -11,11 +11,18 @@ public function getAllPembayaran($jenisket)
         $this->db->join('kelas', 'kelas.idkelas=pembayaran.idkelas');
         $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
         $this->db->where('gunabayar.jenisket', $jenisket);
+        $this->db->like('siswa.nama', $nama);
         $this->db->order_by('idpembayaran', 'DESC');
         return $this->db->get()->result_array();
     }
 
-
+    public function siswasearch($nama)
+    {
+        $this->db->select('*');
+        $this->db->from('siswa');
+        $this->db->like('nama', $nama);
+        return $this->db->get()->result_array();
+    }
 
     public function countAllPembayaran($jenisket)
     {
@@ -62,7 +69,7 @@ public function getAllPembayaran($jenisket)
         return $this->db->get()->row_array();
     }
 
-public function getTagihan2($nis, $gunabayar, $jenisket)
+    public function getTagihan2($nis, $gunabayar, $jenisket)
     {
         $this->db->select('pembayaran.wajibbayar,pembayaran.tanggalbayar,gunabayar.gunabayar,sum(pembayaran.jumlahbayar) as totalbayar');
         $this->db->from('pembayaran', 'gunabayar');
@@ -110,7 +117,7 @@ public function getTagihan2($nis, $gunabayar, $jenisket)
     {
         $id = $this->input->post('id');
         $tahun = $this->input->post('tahun');
-        return $this->db->order_by('nama','ASC')->get_where('siswa', ['idkelas' => $id, 'tahun' => $tahun])->result_array();
+        return $this->db->order_by('nama', 'ASC')->get_where('siswa', ['idkelas' => $id, 'tahun' => $tahun])->result_array();
     }
     public function getSiswaById($id)
     {
@@ -149,7 +156,7 @@ public function getTagihan2($nis, $gunabayar, $jenisket)
         return $this->db->get()->result_array();
     }
 
- public function getGunaBayarKet($ket)
+    public function getGunaBayarKet($ket)
     {
         $this->db->select('*');
         $this->db->from('gunabayar');
@@ -170,7 +177,7 @@ public function getTagihan2($nis, $gunabayar, $jenisket)
     }
 
 
-public function getPengeluaran($limit, $start)
+    public function getPengeluaran($limit, $start)
     {
         $this->db->select('*');
         $this->db->from('pengeluaran');
@@ -224,24 +231,24 @@ public function getPengeluaran($limit, $start)
     public function totalPengeluaranBulan()
     {
         $bulan = gmdate("m");
-	$tahun = gmdate('Y');
+        $tahun = gmdate('Y');
         $query = "SELECT SUM(jumlahbayar) AS total FROM pengeluaran
                     WHERE MONTH(tanggalsimpan) ='$bulan'
 		 AND  YEAR(tanggalsimpan) ='$tahun'";
         return $this->db->query($query)->row_array();
     }
 
- public function totalPemasukanBulan()
+    public function totalPemasukanBulan()
     {
         $jenisket = 'SPP';
         $bulan = gmdate('m');
-	$tahun = gmdate('Y');
+        $tahun = gmdate('Y');
         $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
         $this->db->from('pembayaran');
         $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
         $this->db->where('gunabayar.jenisket', $jenisket);
         $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
-	$this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
+        $this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
         $this->db->group_by('gunabayar.jenisket');
         return $this->db->get()->row_array();
     }
@@ -249,28 +256,28 @@ public function getPengeluaran($limit, $start)
     {
         $ket = '1';
         $bulan = gmdate('m');
-	$tahun = gmdate('Y');
+        $tahun = gmdate('Y');
         $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
         $this->db->from('pembayaran');
         $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
         $this->db->where('gunabayar.ket', $ket);
         $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
         $this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
-	$this->db->group_by('gunabayar.ket');
+        $this->db->group_by('gunabayar.ket');
         return $this->db->get()->row_array();
     }
     public function totalPemasukanBulanNonSPP()
     {
         $ket = '2';
         $bulan = gmdate('m');
-	$tahun = gmdate('Y');
+        $tahun = gmdate('Y');
         $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
         $this->db->from('pembayaran');
         $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
         $this->db->where('gunabayar.ket', $ket);
         $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
         $this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
-	$this->db->group_by('gunabayar.ket');
+        $this->db->group_by('gunabayar.ket');
         return $this->db->get()->row_array();
     }
 
