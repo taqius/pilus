@@ -5,9 +5,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title text-light mt-3 ml-3">
-                            <?= $this->pagination->create_links(); ?>
+                        <div class="card-title text-light mt-3 ml-3 float-left">
+                            <!-- <?= $this->pagination->create_links(); ?> -->
                         </div>
+                        <!-- <div class="card-title text-light mt-3 ml-3 float-right"> -->
+                        <!-- <form> -->
+                        <!-- <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Search Nama"> -->
+                        <!-- </form> -->
+                        <!-- </div> -->
                     </div>
                     <div class="card-body">
                         <?= form_error('menu', '<div class="text-danger">', '</div>');
@@ -15,7 +20,7 @@
                         <?= $this->session->flashdata('message'); ?>
                         <div class="flash-data" data-flashdata="<?= $this->session->flashdata('flash'); ?>">
                         </div>
-                        <table class="table table-bordered table-hover" style="width: 100%">
+                        <table class="table table-bordered table-hover" style="width: 100%" id="tabels">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -28,9 +33,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($pembayaran as $m) : ?>
+                                <?php $i = 0;
+                                foreach ($pembayaran as $m) : ?>
                                     <tr>
-                                        <th scope="row"><?= ++$start; ?></th>
+                                        <th scope="row"><?= ++$i; ?></th>
                                         <td><?= date("d M Y", strtotime($m['tanggalbayar'])); ?></td>
                                         <td><?= $m['nama']; ?></td>
                                         <td><?= $m['tingkat'] . ' - ' . $m['jurusan']; ?></td>

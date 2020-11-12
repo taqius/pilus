@@ -1,7 +1,7 @@
 <div class="row">
     <!-- b -->
     <div>
-        <div class="login-box">
+        <div class="login-box" style="opacity:0.9;">
             <div class="flash-data" data-flashdata="<?= $this->session->flashdata('flash'); ?>"></div>
             <div class="login-logo">
                 <a href="<?= base_url('auth'); ?>" class="text-light"><b>Admin</b> Binus

@@ -20,6 +20,25 @@ class Tu extends CI_Controller
         $data['siswa'] = $this->Tu_model->getSiswa();
         //PAGINATION
         $this->load->library('pagination');
+        // $data['start'] = $this->uri->segment(3);
+        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket);
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/wrapper', $data);
+        $this->load->view('tu/index', $data);
+        $this->load->view('templates/footer');
+    }
+    //view index tu data SPP manual pagination tanpa data table  , unused
+    public function indexmanualpagination()
+    {
+        $jenisket = 'SPP';
+        //mengambil data user dari database user where username sama dengan session yang masuk
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $data['judul'] = 'Data SPP';
+        $data['kelas'] = $this->Tu_model->getKelas();
+        $data['siswa'] = $this->Tu_model->getSiswa();
+        //PAGINATION
+        $this->load->library('pagination');
 
         //config load library
         $config['base_url'] = 'http://localhost/pilus/tu/index';
@@ -74,59 +93,16 @@ class Tu extends CI_Controller
     //view data NON-SPP
     public function indexnon()
     {
-        $jenisket = "Non-SPP";
+        $jenisket = 'Non-SPP';
         //mengambil data user dari database user where username sama dengan session yang masuk
         $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-        $data['judul'] = 'Data Pembayaran';
+        $data['judul'] = 'Data SPP';
         $data['kelas'] = $this->Tu_model->getKelas();
         $data['siswa'] = $this->Tu_model->getSiswa();
         //PAGINATION
         $this->load->library('pagination');
-
-        //config load library
-        $config['base_url'] = 'http://localhost/pilus/tu/indexnon';
-        $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
-        $config['per_page'] = 10;
-        $config['num_links'] = 5;
-
-        //styling pagination
-        $config['full_tag_open'] = '<nav>
-    <ul class="pagination justify-content-center">';
-        $config['full_tag_close'] = '</ul></nav>';
-
-        $config['first_link'] = 'First';
-        $config['first_tag_open'] = '<li class="page-item">';
-        $config['first_tag_close'] = '</li>';
-
-        $config['last_link'] = 'Last';
-        $config['last_tag_open'] = '<li class="page-item">';
-        $config['last_tag_close'] = '</li>';
-
-        $config['next_link'] = '&raquo';
-        $config['next_tag_open'] = '<li class="page-item">';
-        $config['next_tag_close'] = '</li>';
-
-        $config['prev_link'] = '&laquo';
-        $config['prev_tag_open'] = '<li class="page-item">';
-        $config['prev_tag_close'] = '</li>';
-
-        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close'] = '</a></li>';
-
-        $config['num_tag_open'] = '<li class="page-item">';
-        $config['num_tag_close'] = '</li>';
-
-        $config['attributes'] = array('class' => 'page-link');
-
-
-
-        //initialize
-        $this->pagination->initialize($config);
-
-
-
         $data['start'] = $this->uri->segment(3);
-        $data['pembayaran'] = $this->Tu_model->getPembayaran($jenisket, $config['per_page'], $data['start']);
+        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket);
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/wrapper', $data);
@@ -375,7 +351,6 @@ class Tu extends CI_Controller
         $data = $this->Tu_model->getGunaBayarById($id);
         echo json_encode($data);
     }
-
     // UNUSED_SCRIPT BUT USEFULL
     //view laporan
     // public function laporan()

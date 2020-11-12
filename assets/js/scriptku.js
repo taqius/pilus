@@ -22,8 +22,19 @@ var baseurl='http://localhost/pilus/';
         })
     });
 
+    $(document).ready(function(){
+        $('#tabels').DataTable();
+        
+    });
+
+
+
     //Berisi Macam Macam Fungsi Ajax
 $(function() {
+
+    $('#keyword').on('keyup', function(){
+        $('#isitabel').load(baseurl+"tu/datalivesearch");
+    })
 
     //Tombol Tambah Menu ke Modal
     $('.addnewmenu').on('click', function(){

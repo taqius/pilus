@@ -77,7 +77,7 @@
                                 <div class="col-6">
                                     <label>Wajib Bayar</label>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="wajibbayar" name="wajibbayar" readonly>
+                                        <input type="text" class="form-control" id="wajibbayar" name="wajibbayar">
                                     </div>
                                 </div>
                             </div>

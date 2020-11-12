@@ -13,6 +13,18 @@ class Tu_model extends CI_model
         $this->db->where('gunabayar.jenisket', $jenisket);
         return $this->db->get()->num_rows();
     }
+    public function getAllPembayaran($jenisket)
+    {
+        $this->db->select('*');
+        $this->db->from('pembayaran');
+        $this->db->join('siswa', 'siswa.idsiswa=pembayaran.idsiswa');
+        $this->db->join('kelas', 'kelas.idkelas=pembayaran.idkelas');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.jenisket', $jenisket);
+        $this->db->order_by('idpembayaran', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
     public function getPembayaran($jenisket, $limit, $start)
     {
         $this->db->select('*');
@@ -25,7 +37,6 @@ class Tu_model extends CI_model
         $this->db->limit($limit, $start);
         return $this->db->get()->result_array();
     }
-
     public function getPembayaranPrint($id)
     {
         $this->db->select('*');
