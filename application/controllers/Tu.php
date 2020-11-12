@@ -9,6 +9,24 @@ class Tu extends CI_Controller
         $this->load->model('Tu_model');
         cek_loggin();
     }
+public function index2()
+    {
+        $jenisket = 'SPP';
+        //mengambil data user dari database user where username sama dengan session yang masuk
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $data['judul'] = 'Data SPP';
+        $data['kelas'] = $this->Tu_model->getKelas();
+        $data['siswa'] = $this->Tu_model->getSiswa();
+        //PAGINATION
+        $this->load->library('pagination');
+        $data['start'] = $this->uri->segment(3);
+        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket);
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/wrapper', $data);
+        $this->load->view('tu/index', $data);
+        $this->load->view('templates/footer');
+    }
     //view index
     public function index()
     {
@@ -20,28 +38,9 @@ class Tu extends CI_Controller
         $data['siswa'] = $this->Tu_model->getSiswa();
         //PAGINATION
         $this->load->library('pagination');
-        // $data['start'] = $this->uri->segment(3);
-        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket);
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/wrapper', $data);
-        $this->load->view('tu/index', $data);
-        $this->load->view('templates/footer');
-    }
-    //view index tu data SPP manual pagination tanpa data table  , unused
-    public function indexmanualpagination()
-    {
-        $jenisket = 'SPP';
-        //mengambil data user dari database user where username sama dengan session yang masuk
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-        $data['judul'] = 'Data SPP';
-        $data['kelas'] = $this->Tu_model->getKelas();
-        $data['siswa'] = $this->Tu_model->getSiswa();
-        //PAGINATION
-        $this->load->library('pagination');
 
         //config load library
-        $config['base_url'] = 'http://localhost/pilus/tu/index';
+        $config['base_url'] = 'http://192.168.3.2/tu/index';
         $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
         $config['per_page'] = 10;
         $config['num_links'] = 5;
@@ -93,16 +92,59 @@ class Tu extends CI_Controller
     //view data NON-SPP
     public function indexnon()
     {
-        $jenisket = 'Non-SPP';
+        $jenisket = "Non-SPP";
         //mengambil data user dari database user where username sama dengan session yang masuk
         $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-        $data['judul'] = 'Data SPP';
+        $data['judul'] = 'Data Non-SPP';
         $data['kelas'] = $this->Tu_model->getKelas();
         $data['siswa'] = $this->Tu_model->getSiswa();
         //PAGINATION
         $this->load->library('pagination');
+
+        //config load library
+        $config['base_url'] = 'http://192.168.3.2/tu/indexnon';
+        $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
+        $config['per_page'] = 10;
+        $config['num_links'] = 5;
+
+        //styling pagination
+        $config['full_tag_open'] = '<nav>
+    <ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul></nav>';
+
+        $config['first_link'] = 'First';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+
+        $config['last_link'] = 'Last';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+
+        $config['next_link'] = '&raquo';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+
+        $config['prev_link'] = '&laquo';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+
+        $config['attributes'] = array('class' => 'page-link');
+
+
+
+        //initialize
+        $this->pagination->initialize($config);
+
+
+
         $data['start'] = $this->uri->segment(3);
-        $data['pembayaran'] = $this->Tu_model->getAllPembayaran($jenisket);
+        $data['pembayaran'] = $this->Tu_model->getPembayaran($jenisket, $config['per_page'], $data['start']);
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/wrapper', $data);
@@ -325,6 +367,21 @@ class Tu extends CI_Controller
         }
     }
 
+public function tagihansiswa2()
+    {
+        $id = $this->input->post('id');
+        $gunabayar = $this->input->post('gunabayar');
+        $data['siswa'] = $this->Tu_model->getSiswaById($id);
+        $nis = $data['siswa']['nis'];
+        $jenisket = 'SPP';
+        $data = $this->Tu_model->getTagihan2($nis, $gunabayar, $jenisket);
+        if (!empty($data)) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(null);
+        }
+    }
+
     public function hapus($id)
     {
         $this->Tu_model->getHapus($id);
@@ -351,6 +408,131 @@ class Tu extends CI_Controller
         $data = $this->Tu_model->getGunaBayarById($id);
         echo json_encode($data);
     }
+
+//view pengeluaran
+    public function pengeluaran()
+    {
+        //mengambil data user dari database user where username sama dengan session yang masuk
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $data['judul'] = 'Pengeluaran';
+        //PAGINATION
+        $this->load->library('pagination');
+
+        //config load library
+        $config['base_url'] = 'http://192.168.3.2/tu/pengeluaran';
+        $config['total_rows'] = $this->Tu_model->countAllPengeluaran();
+        $config['per_page'] = 10;
+        $config['num_links'] = 5;
+
+        //styling pagination
+        $config['full_tag_open'] = '<nav>
+    <ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul></nav>';
+
+        $config['first_link'] = 'First';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+
+        $config['last_link'] = 'Last';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+
+        $config['next_link'] = '&raquo';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+
+        $config['prev_link'] = '&laquo';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+
+        $config['attributes'] = array('class' => 'page-link');
+
+
+
+        //initialize
+        $this->pagination->initialize($config);
+
+
+
+        $data['start'] = $this->uri->segment(3);
+        $data['pengeluaran'] = $this->Tu_model->getPengeluaran($config['per_page'], $data['start']);
+        $this->form_validation->set_rules('tanggalsimpan', 'Tanggal Simpan', 'required');
+        $this->form_validation->set_rules('tanggalnota', 'Tanggal Nota', 'required');
+        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
+        $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required|numeric|trim');
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/wrapper', $data);
+            $this->load->view('tu/pengeluaran', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'tanggalsimpan' => $this->input->post('tanggalsimpan', true),
+                'tanggalnota' => $this->input->post('tanggalnota', true),
+                'keterangan' => htmlspecialchars($this->input->post('keterangan', true)),
+                'jumlahbayar' => htmlspecialchars($this->input->post('jumlahbayar', true))
+            ];
+            $this->db->insert('pengeluaran', $data);
+            $this->session->set_flashdata('flash', 'Input Pengeluaran');
+            redirect('tu/pengeluaran');
+        }
+    }
+    public function hapuspengeluaran($id)
+    {
+        $this->Tu_model->getHapusPengeluaran($id);
+        $this->session->set_flashdata('flash', 'Menghapus Data');
+        redirect('tu/pengeluaran');
+    }
+    public function laporankeuangan()
+    {
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+
+        $data['pemasukan'] = $this->Tu_model->totalPemasukanBulan();
+        $data['SPP'] = $this->Tu_model->totalPemasukanBulanSPP();
+        $data['NonSPP'] = $this->Tu_model->totalPemasukanBulanNonSPP();
+	$data['pengeluaran'] = $this->Tu_model->totalPengeluaranBulan();
+        $data['judul'] = 'Laporan Keuangan';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/wrapper', $data);
+        $this->load->view('tu/laporankeuangan', $data);
+        $this->load->view('templates/footer');
+    }
+    public function laporankeuangan2()
+    {
+        $tanggal1 = $this->input->post('tanggal1');
+        $tanggal2 = $this->input->post('tanggal2');
+        $pilihlaporan = $this->input->post('pilihlaporan');
+        if ($pilihlaporan == "Pengeluaran") {
+            $data['laporan'] = $this->Tu_model->cariPengeluaran($tanggal1, $tanggal2);
+            $data['total'] = $this->Tu_model->totalPengeluaran($tanggal1, $tanggal2);
+            $data['tanggal1'] = $tanggal1;
+            $data['tanggal2'] = $tanggal2;
+            $this->load->view('tu/laporankeuangan2', $data);
+        } elseif ($pilihlaporan == "SPP") {
+            $ket = '1';
+            $data['laporan'] = $this->Tu_model->cariPemasukan($tanggal1, $tanggal2, $ket);
+            $data['total'] = $this->Tu_model->totalPemasukan($tanggal1, $tanggal2, $ket);
+            $data['tanggal1'] = $tanggal1;
+            $data['tanggal2'] = $tanggal2;
+            $this->load->view('tu/laporankeuangan3', $data);
+        } elseif ($pilihlaporan == "Non-SPP") {
+            $ket = '2';
+            $data['laporan'] = $this->Tu_model->cariPemasukan($tanggal1, $tanggal2, $ket);
+            $data['total'] = $this->Tu_model->totalPemasukan($tanggal1, $tanggal2, $ket);
+            $data['tanggal1'] = $tanggal1;
+            $data['tanggal2'] = $tanggal2;
+            $this->load->view('tu/laporankeuangan3', $data);
+        }
+    }
+
     // UNUSED_SCRIPT BUT USEFULL
     //view laporan
     // public function laporan()
