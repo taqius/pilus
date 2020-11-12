@@ -1,4 +1,4 @@
-var baseurl='http://192.168.3.2/';
+var baseurl='http://localhost/pilus/';
     //Choose File Foto User
     $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();

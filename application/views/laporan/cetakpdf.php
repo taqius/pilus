@@ -71,6 +71,7 @@
             foreach ($gunabayar as $g) :
                 $idsiswa = $siswa['idsiswa'];
                 $idgunabayar = $g['idgunabayar'];
+                $guna = $g['gunabayar'];
                 $this->db->select('pembayaran.wajibbayar,pembayaran.jumlahbayar,sum(pembayaran.jumlahbayar) as totalbayar');
                 $this->db->from('pembayaran');
                 $this->db->where('pembayaran.idsiswa', $idsiswa);
@@ -78,34 +79,57 @@
                 $this->db->group_by('pembayaran.idsiswa');
                 $tagihan = $this->db->get()->row_array();
             ?>
-                <tr>
+                <?php
+                error_reporting(0);
+                if ($tagihan['jumlahbayar'] == null) {
+                ?>
+                    <tr>
+                        <td>
+                            <?php
+                            echo $guna;
+                            ?>
+                        </td>
+                        <?php
+                    } else {
+                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                        if ($total == 0) {
+                        } else {
+                        ?>
+                    <tr>
+                        <td>
+                            <?php
+                            echo $guna;
+                            ?>
+                        </td>
+                <?php
+                        }
+                    }; ?>
+
+                <?php
+                error_reporting(0);
+                if ($tagihan['jumlahbayar'] == null) {
+                ?>
                     <td>
                         <?php
-                        error_reporting(0);
-                        if ($tagihan['jumlahbayar'] == null) {
-                            echo $g['gunabayar'];
-                        } else {
-                            $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                            if ($total == 0) {
-                            } else {
-                                echo $g['gunabayar'];
-                            }
-                        }; ?>
+                        echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
+                        ?>
                     </td>
-                    <td>
-                        <?php
-                        error_reporting(0);
-                        if ($tagihan['jumlahbayar'] == null) {
-                            echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
-                        } else {
-                            $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                            if ($total == 0) {
-                            } else {
-                                echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
-                            }
-                        }; ?>
-                    </td>
-                </tr>
+                    </tr>
+                    <?php
+                } else {
+                    $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                    if ($total == 0) {
+                    } else {
+                    ?>
+                        <td>
+                            <?php
+                            echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
+                            ?>
+                        </td>
+                        </tr>
+                <?php
+                    }
+                }; ?>
             <?php endforeach; ?>
             <?php
             $nis = $siswa['nis'];
@@ -117,35 +141,58 @@
             $this->db->group_by('pembayaran.nis');
             $tagihan = $this->db->get()->row_array();
             $g = $this->db->get_where('gunabayar', ['gunabayar' => 'Seragam'])->row_array();
+            $guna = $g['gunabayar'];
             ?>
-            <tr>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+                    <?php
+                } else {
+                    $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                    if ($total == 0) {
+                    } else {
+                    ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+            <?php
+                    }
+                }; ?>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
                 <td>
                     <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo $g['gunabayar'];
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo $g['gunabayar'];
-                        }
-                    }; ?>
+                    echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
+                    ?>
                 </td>
-                <td>
-                    <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
-                        }
-                    }; ?>
-                </td>
-            </tr>
+                </tr>
+                <?php
+            } else {
+                $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                if ($total == 0) {
+                } else {
+                ?>
+                    <td>
+                        <?php
+                        echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
+                        ?>
+                    </td>
+                    </tr>
+            <?php
+                }
+            }; ?>
             <?php
             $nis = $siswa['nis'];
             $this->db->select('pembayaran.wajibbayar,pembayaran.jumlahbayar,gunabayar.gunabayar,sum(pembayaran.jumlahbayar) as totalbayar');
@@ -156,35 +203,58 @@
             $this->db->group_by('pembayaran.nis');
             $tagihan = $this->db->get()->row_array();
             $g = $this->db->get_where('gunabayar', ['gunabayar' => 'Alat Praktek'])->row_array();
+            $guna = $g['gunabayar'];
             ?>
-            <tr>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+                    <?php
+                } else {
+                    $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                    if ($total == 0) {
+                    } else {
+                    ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+            <?php
+                    }
+                }; ?>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
                 <td>
                     <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo $g['gunabayar'];
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo $g['gunabayar'];
-                        }
-                    }; ?>
+                    echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
+                    ?>
                 </td>
-                <td>
-                    <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
-                        }
-                    }; ?>
-                </td>
-            </tr>
+                </tr>
+                <?php
+            } else {
+                $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                if ($total == 0) {
+                } else {
+                ?>
+                    <td>
+                        <?php
+                        echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
+                        ?>
+                    </td>
+                    </tr>
+            <?php
+                }
+            }; ?>
             <?php
             $nis = $siswa['nis'];
             $this->db->select('pembayaran.wajibbayar,pembayaran.jumlahbayar,gunabayar.gunabayar,sum(pembayaran.jumlahbayar) as totalbayar');
@@ -195,35 +265,58 @@
             $this->db->group_by('pembayaran.nis');
             $tagihan = $this->db->get()->row_array();
             $g = $this->db->get_where('gunabayar', ['gunabayar' => 'Uang Gedung'])->row_array();
+            $guna = $g['gunabayar'];
             ?>
-            <tr>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+                    <?php
+                } else {
+                    $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                    if ($total == 0) {
+                    } else {
+                    ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $guna;
+                        ?>
+                    </td>
+            <?php
+                    }
+                }; ?>
+            <?php
+            error_reporting(0);
+            if ($tagihan['jumlahbayar'] == null) {
+            ?>
                 <td>
                     <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo $g['gunabayar'];
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo $g['gunabayar'];
-                        }
-                    }; ?>
+                    echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
+                    ?>
                 </td>
-                <td>
-                    <?php
-                    error_reporting(0);
-                    if ($tagihan['jumlahbayar'] == null) {
-                        echo "Rp. " . number_format($g['wajibbayar'], 0, ".", ".") . ",-";
-                    } else {
-                        $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
-                        if ($total == 0) {
-                        } else {
-                            echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
-                        }
-                    }; ?>
-                </td>
-            </tr>
+                </tr>
+                <?php
+            } else {
+                $total = $tagihan['wajibbayar'] - $tagihan['totalbayar'];
+                if ($total == 0) {
+                } else {
+                ?>
+                    <td>
+                        <?php
+                        echo "Rp. " . number_format($total, 0, ".", ".") . ",-";
+                        ?>
+                    </td>
+                    </tr>
+            <?php
+                }
+            }; ?>
         </tbody>
     </table>
     <div>
