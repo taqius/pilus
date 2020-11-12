@@ -965,7 +965,7 @@ $("#idsiswa").change(function(){
     var idsiswa = $("#idsiswa").val();
     var gunabayar = 'Seragam';
     $.ajax({
-        url:`${baseurl}tu/tagihansiswa`,
+        url:`${baseurl}tu/tagihansiswa2`,
         data:{id : idsiswa,gunabayar:gunabayar},
         cache:'false',
         async:'false',
@@ -1001,7 +1001,7 @@ $("#idsiswa").change(function(){
     var idsiswa = $("#idsiswa").val();
     var gunabayar = 'Alat Praktek';
     $.ajax({
-        url:`${baseurl}tu/tagihansiswa`,
+        url:`${baseurl}tu/tagihansiswa2`,
         data:{id : idsiswa,gunabayar:gunabayar},
         cache:'false',
         async:'false',
@@ -1037,7 +1037,7 @@ $("#idsiswa").change(function(){
     var idsiswa = $("#idsiswa").val();
     var gunabayar = 'Uang Gedung';
     $.ajax({
-        url:`${baseurl}tu/tagihansiswa`,
+        url:`${baseurl}tu/tagihansiswa2`,
         data:{id : idsiswa,gunabayar:gunabayar},
         cache:'false',
         async:'false',

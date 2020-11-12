@@ -3,17 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Tu_model extends CI_model
 {
-    public function countAllPembayaran($jenisket)
-    {
-        $this->db->select('*');
-        $this->db->from('pembayaran');
-        $this->db->join('siswa', 'siswa.idsiswa=pembayaran.idsiswa');
-        $this->db->join('kelas', 'kelas.idkelas=pembayaran.idkelas');
-        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
-        $this->db->where('gunabayar.jenisket', $jenisket);
-        return $this->db->get()->num_rows();
-    }
-    public function getAllPembayaran($jenisket)
+public function getAllPembayaran($jenisket)
     {
         $this->db->select('*');
         $this->db->from('pembayaran');
@@ -25,6 +15,18 @@ class Tu_model extends CI_model
         return $this->db->get()->result_array();
     }
 
+
+
+    public function countAllPembayaran($jenisket)
+    {
+        $this->db->select('*');
+        $this->db->from('pembayaran');
+        $this->db->join('siswa', 'siswa.idsiswa=pembayaran.idsiswa');
+        $this->db->join('kelas', 'kelas.idkelas=pembayaran.idkelas');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.jenisket', $jenisket);
+        return $this->db->get()->num_rows();
+    }
     public function getPembayaran($jenisket, $limit, $start)
     {
         $this->db->select('*');
@@ -37,6 +39,7 @@ class Tu_model extends CI_model
         $this->db->limit($limit, $start);
         return $this->db->get()->result_array();
     }
+
     public function getPembayaranPrint($id)
     {
         $this->db->select('*');
@@ -56,6 +59,18 @@ class Tu_model extends CI_model
         $this->db->where('gunabayar.gunabayar', $gunabayar);
         $this->db->where('gunabayar.jenisket', $jenisket);
         $this->db->group_by('pembayaran.idsiswa');
+        return $this->db->get()->row_array();
+    }
+
+public function getTagihan2($nis, $gunabayar, $jenisket)
+    {
+        $this->db->select('pembayaran.wajibbayar,pembayaran.tanggalbayar,gunabayar.gunabayar,sum(pembayaran.jumlahbayar) as totalbayar');
+        $this->db->from('pembayaran', 'gunabayar');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('pembayaran.nis', $nis);
+        $this->db->where('gunabayar.gunabayar', $gunabayar);
+        $this->db->where('gunabayar.jenisket', $jenisket);
+        $this->db->group_by('pembayaran.nis');
         return $this->db->get()->row_array();
     }
 
@@ -95,7 +110,7 @@ class Tu_model extends CI_model
     {
         $id = $this->input->post('id');
         $tahun = $this->input->post('tahun');
-        return $this->db->get_where('siswa', ['idkelas' => $id, 'tahun' => $tahun])->result_array();
+        return $this->db->order_by('nama','ASC')->get_where('siswa', ['idkelas' => $id, 'tahun' => $tahun])->result_array();
     }
     public function getSiswaById($id)
     {
@@ -133,6 +148,14 @@ class Tu_model extends CI_model
         $this->db->where('jenisket', $jenisket);
         return $this->db->get()->result_array();
     }
+
+ public function getGunaBayarKet($ket)
+    {
+        $this->db->select('*');
+        $this->db->from('gunabayar');
+        $this->db->where('ket', $ket);
+        return $this->db->get()->result_array();
+    }
     public function getGunaBayarByCheck($idgunabayar)
     {
         $this->db->select('*');
@@ -145,6 +168,112 @@ class Tu_model extends CI_model
         $query = "SELECT * FROM `gunabayar` WHERE `idgunabayar`='$id'";
         return $this->db->query($query)->row_array();
     }
+
+
+public function getPengeluaran($limit, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('pengeluaran');
+        $this->db->order_by('idpengeluaran', 'DESC');
+        $this->db->limit($limit, $start);
+        return $this->db->get()->result_array();
+    }
+    public function countAllPengeluaran()
+    {
+        return $this->db->get('pengeluaran')->num_rows();
+    }
+    public function getHapusPengeluaran($id)
+    {
+        $this->db->delete('pengeluaran', ['idpengeluaran' => $id]);
+    }
+    public function cariPengeluaran($tanggal1, $tanggal2)
+    {
+        $query = "SELECT * FROM pengeluaran
+                    WHERE tanggalsimpan BETWEEN '$tanggal1' AND '$tanggal2'";
+        return $this->db->query($query)->result_array();
+    }
+    public function totalPengeluaran($tanggal1, $tanggal2)
+    {
+        $query = "SELECT SUM(jumlahbayar) AS total FROM pengeluaran
+                    WHERE tanggalsimpan BETWEEN '$tanggal1' AND '$tanggal2'";
+        return $this->db->query($query)->row_array();
+    }
+    public function cariPemasukan($tanggal1, $tanggal2, $ket)
+    {
+        $this->db->select('*');
+        $this->db->from('pembayaran');
+        $this->db->join('siswa', 'siswa.idsiswa=pembayaran.idsiswa');
+        $this->db->join('kelas', 'kelas.idkelas=pembayaran.idkelas');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('pembayaran.tanggalbayar BETWEEN "' . date('Y-m-d', strtotime($tanggal1)) . '" and "' . date('Y-m-d', strtotime($tanggal2)) . '"');
+        $this->db->where('gunabayar.ket', $ket);
+        return $this->db->get()->result_array();
+    }
+    public function totalPemasukan($tanggal1, $tanggal2, $ket)
+    {
+
+        $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
+        $this->db->from('pembayaran');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.ket', $ket);
+        $this->db->where('pembayaran.tanggalbayar BETWEEN "' . date('Y-m-d', strtotime($tanggal1)) . '" and "' . date('Y-m-d', strtotime($tanggal2)) . '"');
+        $this->db->group_by('gunabayar.ket');
+        return $this->db->get()->row_array();
+    }
+
+    public function totalPengeluaranBulan()
+    {
+        $bulan = gmdate("m");
+	$tahun = gmdate('Y');
+        $query = "SELECT SUM(jumlahbayar) AS total FROM pengeluaran
+                    WHERE MONTH(tanggalsimpan) ='$bulan'
+		 AND  YEAR(tanggalsimpan) ='$tahun'";
+        return $this->db->query($query)->row_array();
+    }
+
+ public function totalPemasukanBulan()
+    {
+        $jenisket = 'SPP';
+        $bulan = gmdate('m');
+	$tahun = gmdate('Y');
+        $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
+        $this->db->from('pembayaran');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.jenisket', $jenisket);
+        $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
+	$this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
+        $this->db->group_by('gunabayar.jenisket');
+        return $this->db->get()->row_array();
+    }
+    public function totalPemasukanBulanSPP()
+    {
+        $ket = '1';
+        $bulan = gmdate('m');
+	$tahun = gmdate('Y');
+        $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
+        $this->db->from('pembayaran');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.ket', $ket);
+        $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
+        $this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
+	$this->db->group_by('gunabayar.ket');
+        return $this->db->get()->row_array();
+    }
+    public function totalPemasukanBulanNonSPP()
+    {
+        $ket = '2';
+        $bulan = gmdate('m');
+	$tahun = gmdate('Y');
+        $this->db->select('SUM(pembayaran.jumlahbayar) AS total');
+        $this->db->from('pembayaran');
+        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+        $this->db->where('gunabayar.ket', $ket);
+        $this->db->where('MONTH(pembayaran.tanggalbayar)', $bulan);
+        $this->db->where('YEAR(pembayaran.tanggalbayar)', $tahun);
+	$this->db->group_by('gunabayar.ket');
+        return $this->db->get()->row_array();
+    }
+
 
 
     public function getHapus($id)
