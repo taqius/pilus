@@ -1,5 +1,5 @@
 var baseurl='http://192.168.3.2/';
-    //Choose File Foto User
+   //Choose File Foto User
     $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
@@ -17,19 +17,17 @@ var baseurl='http://192.168.3.2/';
                 roleId: roleId
             },
             success: function() {
-                document.location.href = baseurl + "admin/roleaccess/" + roleId;
+               document.location.href = baseurl + "admin/roleaccess/" + roleId;
             }
         })
     });
 
-
+$(document).ready(function(){
+        $('#tabels').DataTable();
+    });
 
     //Berisi Macam Macam Fungsi Ajax
 $(function() {
-
-    $('#keyword').on('keyup', function(){
-        $('#isitabel').load(baseurl+"tu/datalivesearch");
-    })
 
     //Tombol Tambah Menu ke Modal
     $('.addnewmenu').on('click', function(){
@@ -101,7 +99,7 @@ $(function() {
         $('.addKelas').on('click', function() {
             $('#kelasModalLabel').html('Add Kelas');
             $('.modal-footer button[type=submit]').html('Add');
-            $('#tingkat').val('');
+           $('#tingkat').val('');
             $('#jurusan').val('');
         });
     });
@@ -374,6 +372,31 @@ $("#tahunsiswa").change(function(){
                 }
             });
         });
+
+
+//PILIH LAPORAN - LAPORAN KEUANGAN TU
+        $("#pilihlaporan").change(function(){
+            var tanggal1 = $("#tanggal1").val();
+            var tanggal2 = $("#tanggal2").val();
+            var pilihlaporan = $("#pilihlaporan").val();
+            //dibawah ini data id pertama nama parameter yang dikirimkan, id yang kedua isi dari this data id di atas
+            $.ajax({
+                url:`${baseurl}tu/laporankeuangan2`,
+                data:{tanggal1 : tanggal1,tanggal2:tanggal2,pilihlaporan:pilihlaporan},
+                async:'false',
+                cache:'false',
+                method: 'post',
+                dataType: 'html',
+                success: function(datalaporan){
+		
+                    $(".divlaporan").show();
+                    $("#tabellaporan").html(datalaporan);
+                }
+            });
+        });
+
+
+
 
     //ID TAHUN ON CHANGE LAPORAN SPP DAT DARI SPPKELAS.PHP
     $("#tahun").change(function(){
@@ -1102,6 +1125,5 @@ $("#idgunabayarnon").change(function(){
 
 //end function
 });
-
 
 

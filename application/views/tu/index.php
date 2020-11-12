@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title text-light mt-3 ml-3 float-left">
-                            <!-- <?= $this->pagination->create_links(); ?> -->
+                           <?= $this->pagination->create_links(); ?>
                         </div>
                         <!-- <div class="card-title text-light mt-3 ml-3 float-right"> -->
                         <!-- <form> -->
@@ -33,10 +33,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 0;
+                                <?php
                                 foreach ($pembayaran as $m) : ?>
                                     <tr>
-                                        <th scope="row"><?= ++$i; ?></th>
+                                        <th scope="row"><?= ++$start; ?></th>
                                         <td><?= date("d M Y", strtotime($m['tanggalbayar'])); ?></td>
                                         <td><?= $m['nama']; ?></td>
                                         <td><?= $m['tingkat'] . ' - ' . $m['jurusan']; ?></td>

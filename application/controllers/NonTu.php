@@ -22,7 +22,7 @@ class NonTu extends CI_Controller
         $this->load->library('pagination');
 
         //config load library
-        $config['base_url'] = 'http://localhost/pilus/tu/index';
+        $config['base_url'] = 'http://192.168.3.2/nontu/index';
         $config['total_rows'] = $this->Tu_model->countAllPembayaran($jenisket);
         $config['per_page'] = 10;
         $config['num_links'] = 5;
@@ -80,10 +80,10 @@ class NonTu extends CI_Controller
         $data['tahun'] = $this->Tu_model->getTahun();
         $jenisket = 'Non-SPP';
         $data['gunabayar'] = $this->Tu_model->getGunaBayar($jenisket);
-        $this->form_validation->set_rules('idkelas', 'Kelas', 'required');
-        $this->form_validation->set_rules('tahun', 'Tahun', 'required');
-        $this->form_validation->set_rules('idsiswa', 'Siswa', 'required');
-        $this->form_validation->set_rules('idgunabayar', 'Guna Bayar', 'required');
+        $this->form_validation->set_rules('idkelasnon', 'Kelas', 'required');
+        $this->form_validation->set_rules('tahunnon', 'Tahun', 'required');
+        $this->form_validation->set_rules('idsiswanon', 'Siswa', 'required');
+        $this->form_validation->set_rules('idgunabayarnon', 'Guna Bayar', 'required');
         $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required|numeric|trim');
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/header', $data);
@@ -94,11 +94,11 @@ class NonTu extends CI_Controller
         } else {
             $data = [
                 'tanggalbayar' => $this->input->post('tanggalbayar', true),
-                'idkelas' => $this->input->post('idkelas', true),
-                'tahun' => $this->input->post('tahun', true),
-                'idsiswa' => $this->input->post('idsiswa', true),
+                'idkelas' => $this->input->post('idkelasnon', true),
+                'tahun' => $this->input->post('tahunnon', true),
+                'idsiswa' => $this->input->post('idsiswanon', true),
                 'nis' => $this->input->post('nis', true),
-                'idgunabayar' => $this->input->post('idgunabayar', true),
+                'idgunabayar' => $this->input->post('idgunabayarnon', true),
                 'wajibbayar' => $this->input->post('wajibbayar', true),
                 'jumlahbayar' => htmlspecialchars($this->input->post('jumlahbayar', true)),
             ];

@@ -9,7 +9,12 @@
     <thead>
         <th>#</th>
         <th>Nama</th>
-        <?php foreach ($gunabayar as $tg) : ?>
+        <?php foreach ($gunabayar1 as $tg) : ?>
+            <th>
+                <?= $tg['gunabayar']; ?>
+            </th>
+        <?php endforeach; ?>
+        <?php foreach ($gunabayar2 as $tg) : ?>
             <th>
                 <?= $tg['gunabayar']; ?>
             </th>
@@ -21,7 +26,7 @@
             <tr>
                 <td><?= ++$i; ?></td>
                 <td><?= $s['nama']; ?></td>
-                <?php foreach ($gunabayar as $g) : ?>
+                <?php foreach ($gunabayar1 as $g) : ?>
                     <td>
                         <?php
                         $guna = $g['idgunabayar'];
@@ -32,6 +37,22 @@
                         $this->db->where('pembayaran.idsiswa', $idsiswa);
                         $this->db->where('gunabayar.idgunabayar', $guna);
                         $this->db->group_by('pembayaran.idsiswa');
+                        $data = $this->db->get()->row_array();
+                        echo "Rp. " . number_format($data['total'], 0, ".", ".") . ",-";
+                        ?>
+                    </td>
+                <?php endforeach; ?>
+                <?php foreach ($gunabayar2 as $g) : ?>
+                    <td>
+                        <?php
+                        $guna = $g['idgunabayar'];
+                        $nis = $s['nis'];
+                        $this->db->select('pembayaran.wajibbayar,pembayaran.tanggalbayar,gunabayar.gunabayar,sum(pembayaran.jumlahbayar) as total');
+                        $this->db->from('pembayaran', 'gunabayar');
+                        $this->db->join('gunabayar', 'gunabayar.idgunabayar=pembayaran.idgunabayar');
+                        $this->db->where('pembayaran.nis', $nis);
+                        $this->db->where('gunabayar.idgunabayar', $guna);
+                        $this->db->group_by('pembayaran.nis');
                         $data = $this->db->get()->row_array();
                         echo "Rp. " . number_format($data['total'], 0, ".", ".") . ",-";
                         ?>

@@ -7,7 +7,7 @@
                         <?= $this->session->flashdata('message'); ?>
                         <div class="flash-data" data-flashdata="<?= $this->session->flashdata('flash'); ?>">
                         </div>
-                        <form action="<?= base_url('tu/bayar'); ?>" method="post">
+                        <form action="<?= base_url('nontu/pembayaran'); ?>" method="post">
                             <div class="row">
                                 <div class="col-5">
                                     <div class="form-group">
@@ -77,7 +77,7 @@
                                 <div class="col-6">
                                     <label>Wajib Bayar</label>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="wajibbayar" name="wajibbayar" readonly>
+                                        <input type="text" class="form-control" id="wajibbayar" name="wajibbayar">
                                     </div>
                                 </div>
                             </div>

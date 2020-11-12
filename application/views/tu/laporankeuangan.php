@@ -1,5 +1,5 @@
 <section class="content">
-    <div class="container-fluid">
+	<div class="container-fluid">
         <div class="row">
             <div class="col-lg-3">
                 <div class="small-box bg-success">
@@ -21,7 +21,7 @@
                         <p>UG,AP,Seragam <?= gmdate('M Y'); ?></p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-comments-dollar"></i>
                     </div>
                     <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
                 </div>
@@ -33,9 +33,9 @@
                         <p>Total Pemasukan <?= gmdate('M Y'); ?></p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-file-invoice-dollar"></i>
                     </div>
-                    <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-down"></i></a>
+                    <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-up"></i></a>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                         <p>Pengeluaran <?= gmdate('M Y'); ?></p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-shopping-cart"></i>
                     </div>
                     <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-down"></i></a>
                 </div>
@@ -59,7 +59,7 @@
                         <p>Sisa Saldo Bulan <?= gmdate('M Y'); ?></p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-hand-holding-usd"></i>
                     </div>
                     <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-down"></i></a>
                 </div>

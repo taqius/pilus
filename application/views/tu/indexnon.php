@@ -6,11 +6,11 @@
 
                 <!-- Default box -->
                 <div class="card">
-                    <!-- <div class="card-header">
+                     <div class="card-header">
                         <div class="card-title text-light mt-3 ml-3">
-                            <a class="btn btn-primary addpembayaran" data-toggle="modal" data-target="#pembayaranModal">Add <i class="fas fa-plus"></i></a>
+                        <?= $this->pagination->create_links(); ?>
                         </div>
-                    </div> -->
+                    </div>
 
                     <div class="card-body">
                         <?= form_error('menu', '<div class="text-danger">', '</div>');
@@ -50,7 +50,6 @@
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
-                        <?= $this->pagination->create_links(); ?>
                     </div>
                     <!-- /.card-footer-->
                 </div>
