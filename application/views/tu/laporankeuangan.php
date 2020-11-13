@@ -1,5 +1,5 @@
 <section class="content">
-	<div class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3">
                 <div class="small-box bg-success">
@@ -107,6 +107,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>

@@ -13,9 +13,10 @@ $('.tombol-hapus').on('click', function (e) {
 
     e.preventDefault();
     const href = $(this).attr('href');
+    const nama = $("#nama").val();
     Swal({
         title: 'Apakah anda yakin',
-        text: "data akan dihapus",
+        text: "data " + nama + " akan dihapus",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

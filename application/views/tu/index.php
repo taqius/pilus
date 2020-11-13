@@ -45,7 +45,9 @@
                                             <td><?= "Rp. " . number_format($m['jumlahbayar'], 0, ".", ".") . ",-"; ?></td>
                                             <td>
                                                 <form method="POST" action="<?= base_url('laporan/print'); ?>">
-                                                    <input type="hidden" name="id" value="<?= $m['idpembayaran']; ?>"><button class="btn btn-primary mb-1"><img src="<?= base_url('assets/images/printer.png'); ?>" class="img img-fluid img-sm"></button>
+                                                    <input type="hidden" name="id" value="<?= $m['idpembayaran']; ?>">
+                                                    <input type="hidden" name="nama" value="<?= $m['nama']; ?>" id="nama">
+                                                    <button class="btn btn-primary mb-1"><img src="<?= base_url('assets/images/printer.png'); ?>" class="img img-fluid img-sm"></button>
                                                     <a href="<?= base_url('tu/hapus'); ?>/<?= $m['idpembayaran']; ?>" class="btn btn-danger tombol-hapus"><i class="far fa-trash-alt"></i></a>
                                                 </form>
                                             </td>

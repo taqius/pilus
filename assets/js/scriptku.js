@@ -1,10 +1,10 @@
 var baseurl='http://localhost/pilus/';
-    //Choose File Foto User
+//Choose File Foto User
     $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
-
+    
     //Check Box Set Role Auto Input
     $('.form-check-input').on('click', function() {
         const menuId = $(this).data('menu');
@@ -22,10 +22,34 @@ var baseurl='http://localhost/pilus/';
         })
     });
 
-
+    
 
     //Berisi Macam Macam Fungsi Ajax
-$(function() {
+    $(function() {
+
+    $('.divlaporan').hide(); //hidden divlaporan on load
+    //PILIH LAPORAN KEUANGAN
+    $("#pilihlaporan").change(function(){
+        var pilihlaporan = $("#pilihlaporan").val();
+        var tanggal1 = $("#tanggal1").val();
+        var tanggal2 = $("#tanggal2").val();
+        //dibawah ini data id pertama nama parameter yang dikirimkan, id yang kedua isi dari this data id di atas
+        $.ajax({
+            url:`${baseurl}tu/laporankeuangan2`,
+            data:{pilihlaporan: pilihlaporan,tanggal1: tanggal1,tanggal2: tanggal2},
+            async:'false',
+            cache:'false',
+            method: 'post',
+            dataType: 'html',
+            success: function(datalaporan){
+                $(".divlaporan").show();
+                $("#tabellaporan").html(datalaporan);
+            }
+        });
+    });
+
+
+
     //live search data SPP
     $('#keyword').on('keyup', function(){
         var keyword=$("#keyword").val();
@@ -38,7 +62,6 @@ $(function() {
             dataType: 'html',
             success: function(livesearch){
             $("#divtabel").html(livesearch);
-            console.log(livesearch);
             }
         });
     });
@@ -368,7 +391,6 @@ $("#tahunsiswa").change(function(){
 
 
     //ID KELAS LAPORAN SPP, ON CHANGE AMBIL DATA HTML DARI SPPKELAS.PHP
-    $('.divlaporan').hide(); //hidden divlaporan on load
     $("#idkelas").change(function(){
             var idkelaslaporan = $("#idkelas").val();
             var tahunlaporan = $("#tahun").val();

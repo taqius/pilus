@@ -56,7 +56,7 @@ class Laporan extends CI_Controller
         $tahun = $this->input->post('tahun');
         $data['siswa'] = $this->Tu_model->getSiswaByKelas($id, $tahun);
         $data['tahun'] = $tahun;
-	$ket1 = '1';
+	    $ket1 = '1';
         $ket2 = '2';
         $data['gunabayar1'] = $this->Tu_model->getGunaBayarKet($ket1);
         $data['gunabayar2'] = $this->Tu_model->getGunaBayarKet($ket2);
