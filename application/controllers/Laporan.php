@@ -56,13 +56,29 @@ class Laporan extends CI_Controller
         $tahun = $this->input->post('tahun');
         $data['siswa'] = $this->Tu_model->getSiswaByKelas($id, $tahun);
         $data['tahun'] = $tahun;
-	    $ket1 = '1';
+        $ket1 = '1';
         $ket2 = '2';
         $data['gunabayar1'] = $this->Tu_model->getGunaBayarKet($ket1);
         $data['gunabayar2'] = $this->Tu_model->getGunaBayarKet($ket2);
         $data['kelas'] = $this->Tu_model->getIdKelas($id);
         $this->load->view('laporan/sppkelas', $data);
     }
+    public function keuangannontu()
+    {
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+
+        $data['pemasukan'] = $this->Tu_model->totalPemasukanBulan();
+        $data['SPP'] = $this->Tu_model->totalPemasukanBulanSPP();
+        $data['NonSPP'] = $this->Tu_model->totalPemasukanBulanNonSPP();
+        $data['pengeluaran'] = $this->Tu_model->totalPengeluaranBulan();
+        $data['judul'] = 'Keuangan Non-TU';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/wrapper', $data);
+        $this->load->view('laporan/keuangannontu', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function print()
     {
         $id = $this->input->post('id');
@@ -123,7 +139,7 @@ class Laporan extends CI_Controller
         $data['siswa'] = $this->Tu_model->getSiswaById($id);
         $data['gunabayar'] = $this->Tu_model->getGunaBayarByCheck($idgunabayar);
         $html = $this->load->view('laporan/cetakpdf', $data, true);
-	$nama = $data['siswa']['nama'];
+        $nama = $data['siswa']['nama'];
         // Create an instance of the class:
         $this->mpdf = new \Mpdf\Mpdf();
 
@@ -131,7 +147,7 @@ class Laporan extends CI_Controller
         $this->mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $this->mpdf->Output('Tagihan '. $nama .'.pdf', \Mpdf\Output\Destination::DOWNLOAD);
+        $this->mpdf->Output('Tagihan ' . $nama . '.pdf', \Mpdf\Output\Destination::DOWNLOAD);
     }
     //VIEWDATA GUNA BAYAR
     public function gunabayar()
