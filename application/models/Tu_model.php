@@ -161,6 +161,7 @@ class Tu_model extends CI_model
         $this->db->select('*');
         $this->db->from('gunabayar');
         $this->db->where('ket', $ket);
+        $this->db->order_by('urut', 'ASC');
         return $this->db->get()->result_array();
     }
     public function getGunaBayarByCheck($idgunabayar)
