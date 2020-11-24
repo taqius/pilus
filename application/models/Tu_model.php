@@ -228,7 +228,15 @@ class Tu_model extends CI_model
         $this->db->group_by('gunabayar.ket');
         return $this->db->get()->row_array();
     }
+    public function totalPemasukanNon($id, $tahun)
+    {
 
+        $this->db->select('SUM(jumlahbayar) AS total');
+        $this->db->from('pembayaran');
+        $this->db->where('idgunabayar', $id);
+        $this->db->where('tahun', $tahun);
+        return $this->db->get()->row_array();
+    }
     public function totalPengeluaranBulan()
     {
         $bulan = gmdate("m");

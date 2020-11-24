@@ -48,6 +48,42 @@ var baseurl='http://localhost/pilus/';
         });
     });
 
+    //PILIH PEMBAYARAN NON-SPP
+    $("#pilihpembayaran").change(function(){
+        var pilihpembayaran = $("#pilihpembayaran").val();
+        var tahun = $("#tahun").val();
+        //dibawah ini data id pertama nama parameter yang dikirimkan, id yang kedua isi dari this data id di atas
+        $.ajax({
+            url:`${baseurl}nontu/keuangannontu2`,
+            data:{pilihpembayaran: pilihpembayaran,tahun: tahun},
+            async:'false',
+            cache:'false',
+            method: 'post',
+            dataType: 'html',
+            success: function(datapembayaran){
+                $("#divkeuangan").html(datapembayaran);
+            }
+        });
+    });
+
+    //PILIH PEMBAYARAN NON-SPP TAHUN
+    $("#tahun").change(function(){
+        var pilihpembayaran = $("#pilihpembayaran").val();
+        var tahun = $("#tahun").val();
+        //dibawah ini data id pertama nama parameter yang dikirimkan, id yang kedua isi dari this data id di atas
+        $.ajax({
+            url:`${baseurl}nontu/keuangannontu2`,
+            data:{pilihpembayaran: pilihpembayaran,tahun: tahun},
+            async:'false',
+            cache:'false',
+            method: 'post',
+            dataType: 'html',
+            success: function(datapembayaran){
+                $("#divkeuangan").html(datapembayaran);
+            }
+        });
+    });
+
 
 
     //live search data SPP

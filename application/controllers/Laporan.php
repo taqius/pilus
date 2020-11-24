@@ -63,21 +63,7 @@ class Laporan extends CI_Controller
         $data['kelas'] = $this->Tu_model->getIdKelas($id);
         $this->load->view('laporan/sppkelas', $data);
     }
-    public function keuangannontu()
-    {
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
 
-        $data['pemasukan'] = $this->Tu_model->totalPemasukanBulan();
-        $data['SPP'] = $this->Tu_model->totalPemasukanBulanSPP();
-        $data['NonSPP'] = $this->Tu_model->totalPemasukanBulanNonSPP();
-        $data['pengeluaran'] = $this->Tu_model->totalPengeluaranBulan();
-        $data['judul'] = 'Keuangan Non-TU';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/wrapper', $data);
-        $this->load->view('laporan/keuangannontu', $data);
-        $this->load->view('templates/footer');
-    }
 
     public function print()
     {

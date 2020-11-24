@@ -107,6 +107,32 @@ class NonTu extends CI_Controller
             redirect('nontu/pembayaran');
         }
     }
+
+    //VIEW LAPORAN KEUANGAN NONTU
+    public function keuangannontu()
+    {
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $jenisket = 'Non-SPP';
+        $data['tahun'] = $this->Tu_model->getTahun();
+        $data['gunabayar'] = $this->Tu_model->getGunaBayar($jenisket);
+        $data['judul'] = 'Total Pembayaran';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/wrapper', $data);
+        $this->load->view('nontu/keuangannontu', $data);
+        $this->load->view('templates/footer');
+    }
+    public function keuangannontu2()
+    {
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $id = $this->input->post('pilihpembayaran');
+        $tahun = $this->input->post('tahun');
+        $data['tahun'] = $this->input->post('tahun');
+        $data['gunabayar'] = $this->Tu_model->getGunaBayarById($id);
+        $data['pemasukan'] = $this->Tu_model->totalPemasukanNon($id, $tahun);
+        $data['judul'] = 'Total Pembayaran';
+        $this->load->view('nontu/keuangannontu2', $data);
+    }
     public function carisiswa()
     {
         $id = $this->input->post('id');
