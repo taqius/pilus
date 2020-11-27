@@ -84,7 +84,7 @@ class NonTu extends CI_Controller
         $this->form_validation->set_rules('tahunnon', 'Tahun', 'required');
         $this->form_validation->set_rules('idsiswanon', 'Siswa', 'required');
         $this->form_validation->set_rules('idgunabayarnon', 'Guna Bayar', 'required');
-        $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required|numeric|trim');
+        $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required');
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -92,6 +92,9 @@ class NonTu extends CI_Controller
             $this->load->view('nontu/bayar', $data);
             $this->load->view('templates/footer');
         } else {
+            $wajibbayar = preg_replace("/[^0-9]/", "", $this->input->post('wajibbayar'));
+            $jumlahbayar = preg_replace("/[^0-9]/", "", $this->input->post('jumlahbayar'));
+
             $data = [
                 'tanggalbayar' => $this->input->post('tanggalbayar', true),
                 'idkelas' => $this->input->post('idkelasnon', true),
@@ -99,8 +102,8 @@ class NonTu extends CI_Controller
                 'idsiswa' => $this->input->post('idsiswanon', true),
                 'nis' => $this->input->post('nis', true),
                 'idgunabayar' => $this->input->post('idgunabayarnon', true),
-                'wajibbayar' => $this->input->post('wajibbayar', true),
-                'jumlahbayar' => htmlspecialchars($this->input->post('jumlahbayar', true)),
+                'wajibbayar' => htmlspecialchars($wajibbayar),
+                'jumlahbayar' => htmlspecialchars($jumlahbayar)
             ];
             $this->db->insert('pembayaran', $data);
             $this->session->set_flashdata('flash', 'Proses Pembayaran');

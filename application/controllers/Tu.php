@@ -178,7 +178,7 @@ class Tu extends CI_Controller
         $this->form_validation->set_rules('tahun', 'Tahun', 'required');
         $this->form_validation->set_rules('idsiswa', 'Siswa', 'required');
         $this->form_validation->set_rules('idgunabayar', 'Guna Bayar', 'required');
-        $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required|numeric|trim');
+        $this->form_validation->set_rules('jumlahbayar', 'Jumlah Bayar', 'required');
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -186,6 +186,9 @@ class Tu extends CI_Controller
             $this->load->view('tu/bayar', $data);
             $this->load->view('templates/footer');
         } else {
+            $wajibbayar = preg_replace("/[^0-9]/", "", $this->input->post('wajibbayar'));
+            $jumlahbayar = preg_replace("/[^0-9]/", "", $this->input->post('jumlahbayar'));
+
             $data = [
                 'tanggalbayar' => $this->input->post('tanggalbayar', true),
                 'idkelas' => $this->input->post('idkelas', true),
@@ -193,8 +196,8 @@ class Tu extends CI_Controller
                 'idsiswa' => $this->input->post('idsiswa', true),
                 'nis' => $this->input->post('nis', true),
                 'idgunabayar' => $this->input->post('idgunabayar', true),
-                'wajibbayar' => $this->input->post('wajibbayar', true),
-                'jumlahbayar' => htmlspecialchars($this->input->post('jumlahbayar', true)),
+                'wajibbayar' => htmlspecialchars($wajibbayar),
+                'jumlahbayar' => htmlspecialchars($jumlahbayar)
             ];
             $this->db->insert('pembayaran', $data);
             $this->session->set_flashdata('flash', 'Proses Pembayaran');

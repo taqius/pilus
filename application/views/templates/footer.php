@@ -35,6 +35,7 @@
 <script src="<?= base_url('assets'); ?>/js/myscript.js">
 </script>
 <script src="<?= base_url('assets'); ?>/js/scriptku.js"></script>
+<script src="<?= base_url('assets'); ?>/js/rupiah.js"></script>
 </body>
 
 </html>
